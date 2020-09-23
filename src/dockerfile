@@ -1,0 +1,11 @@
+FROM golang:alpine as builder
+WORKDIR /go/src/app
+
+COPY ./server .
+RUN go get -d -v .
+RUN go build -o server
+RUN rm server.go
+
+FROM scratch
+COPY --from=builder ./go/src/app/server /server
+ENTRYPOINT ["/server"]

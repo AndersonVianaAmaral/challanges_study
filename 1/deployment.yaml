@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx-deployment
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: nginx-pods
+    template:
+        metadata:
+          labels:
+            app: nginx-pods
+        spec:
+            containers:
+                - name: nginx
+                  image: nginx:1.17-alpine
+                  ports:
+                    - containerPort: 80
+                  resources:
+                    requests:
+                        cpu: "220m"
+                        memory: "64Mi"
+                    limits:
+                        cpu: "250m"
+                  volumeMounts:
+                    - mountPath: /etc/nginx/conf.d
+                      name: nginx-conf
+                      readOnly: true
+                    - mountPath: /usr/share/nginx/html/index.html
+                      name: html-file
+                      readOnly: true
+            volumes:
+                - name: nginx-conf
+                  configMap:
+                    name: nginx
+                    items:
+                     - key: nginx.conf
+                       path: nginx.conf
+                - name: html-file
+                  configMap:
+                    name: nginx
+                    items:
+                     - key: html.file
+                       path: html.file

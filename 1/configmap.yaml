@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: nginx
+data:
+    nginx.conf: |
+        server {
+            listen 80;
+            index index.php index.html;
+            root /usr/share/nginx/html;
+
+            rewrite ^/google$ http://google.com permanent; 
+        }
+    html.file: |
+        <h1> Code Education Rocks! </h1>
